@@ -55,8 +55,8 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
               _sectionTitle('10. Termination'),
               _sectionBody('We may terminate or suspend your access to Storem app at any time, with or without cause or notice, for conduct that we believe violates these Terms or is harmful to other users or us.\n\n'),
               _sectionTitle('11. Disclaimers and Liability Limitations'),
-              _sectionBody('11.1. THE STOREM APP AND SOFTWARE ASSOCIATED THEREWITH, OR ANY OTHER FEATURES OR FUNCTIONALITIES ASSOCIATED WITH THE STOREM APP, ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITH ALL FAULTS AND WITHOUT WARRANTY OF ANY KIND.  STOREMMAKE NO WARRANTIES, EXPRESS OR IMPLIED, REGARDING THE APP,  INCLUDING BUT NOT LIMITED TO ITS ACCURACY,RELIABILITY,OR AVAILABILITY. WE DISCLAIM ALL WARRANTIES TO THE FULLEST EXTENT PERMITTED BY LAW. \n '
-                  '11.2  TO THE EXTENT PERMITTED BY LAW,WE SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL,CONSEQUENTIAL,OR PUNITIVE DAMAGES ARISING OUT OF OR RELATED TO YOUR USE OF THE APP, EVEN IF WE HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES."\n\n'),
+              _sectionBody('11.1. The storem app and software associated therewith, or any other features or functionalities associated with the storem app, are provided "as is" and "as available" with all faults and without warranty of any kind. storem make no warranties, express or implied, regarding the app, including but not limited to its accuracy, reliability, or availability. we disclaim all warranties to the fullest extent permitted by law.\n\n '
+                  '11.2  To the extent permitted by law, we shall not be liable for any direct, indirect, special, consequential, or punitive damages arising out of or related to your use of the app, even if we have been advised of the possibility of such damages.."\n\n'),
               _sectionTitle('12. Miscellaneous'),
               _sectionBody('These Terms are governed by Texas law. We may update them occasionally, and continued use signifies acceptance.\n\n'),
              _sectionTitle('12.1. Indemnification'),
@@ -68,7 +68,7 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
               _sectionTitle('12.4. Feedback'),
               _sectionBody('Storem app is free to use any comments, information, ideas, concepts, reviews, or techniques or any other material contained in any communication you may send to us ("Feedback"), including responses to questionnaires or through postings to the Storem app, including our websites and user interfaces, worldwide and in perpetuity without further compensation, acknowledgement or payment to you for any purpose whatsoever including, but not limited to, developing, manufacturing and marketing products and creating, modifying or improving Storem app. In addition, you agree not to enforce any "moral rights" in and to the Feedback, to the extent permitted by applicable law.\n\n'),
               _sectionTitle('12.5. Survival'),
-              _sectionBody('If any provision or provisions of these Terms of Use shall be held to be invalid, illegal, or unenforceable, the validity, legality and enforceability of the remaining provisions shall remain in full force and effect.'),
+              _sectionBody('If any provision or provisions of these Terms of Use shall be held to be invalid, illegal, or unenforceable, the validity, legality and enforceability of the remaining provisions shall remain in full force and effect.\n\n'),
               _sectionTitle('12.6 Contact Us'),
               _sectionBody('If you have any questions or concerns about these Terms, please contact us at contact@storem'),
             ],

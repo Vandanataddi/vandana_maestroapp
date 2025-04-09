@@ -409,6 +409,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     });
   }
 }
+
+
 class MySearchDelegate extends SearchDelegate {
   User? _currentUser;
   final String uid; // Store user ID
@@ -422,7 +424,6 @@ class MySearchDelegate extends SearchDelegate {
     print(_currentUser);
     if (_currentUser == null) {
     }
-    // setState(() {});
   }
 
   @override
@@ -436,7 +437,7 @@ class MySearchDelegate extends SearchDelegate {
             query = "";
           }
         },
-        icon: Icon(Icons.clear, color: Colors.black),
+        icon: Icon(Icons.clear, color: Colors.white),
       ),
     ];
   }
@@ -448,99 +449,35 @@ class MySearchDelegate extends SearchDelegate {
       icon: Icon(Icons.arrow_back_outlined),
     );
   }
-
   @override
   Widget buildResults(BuildContext context) {
-    // return StreamBuilder<QuerySnapshot>(
-    //   stream: FirebaseFirestore.instance
-    //       .collection('items')
-    //       .where('userId', isEqualTo: uid)
-    //       .where('title', isGreaterThanOrEqualTo: query)
-    //       .where('title', isLessThanOrEqualTo: query + '\uf8ff') // Ensures full matching
-    //       .snapshots(),
-    //   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(child: Text('Error: ${snapshot.error}'));
-    //     }
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return Center(child: CircularProgressIndicator());
-    //     }
-    //     if (snapshot.data!.docs.isEmpty) {
-    //       return Center(child: Text('No results found'));
-    //     }
-    //
-    //     return GridView.builder(
-    //       itemCount: snapshot.data!.docs.length,
-    //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //         crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-    //         mainAxisSpacing: 16.0,
-    //         crossAxisSpacing: 16.0,
-    //         childAspectRatio: 1.0,
-    //       ),
-    //       padding: EdgeInsets.all(8),
-    //       itemBuilder: (context, index) {
-    //         Map<String, dynamic> data =
-    //         snapshot.data!.docs[index].data() as Map<String, dynamic>;
-    //
-    //         return SizedBox(
-    //           height: 350,
-    //           child: Card(
-    //             color: Color(0xFFFBBB8F),
-    //             child: Column(
-    //               children: <Widget>[
-    //                 SizedBox(
-    //                   height: 120,
-    //                   width: double.infinity,
-    //                   child: URLThumbnail(
-    //                     data["url"],
-    //                     data["thumbnailUrl"],
-    //                     data["title"],
-    //                   ),
-    //                 ),
-    //                 SizedBox(height: 5),
-    //                 Padding(
-    //                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    //                   child: Row(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                     children: [
-    //                       Expanded(
-    //                         child: Text(
-    //                           data["title"],
-    //                           maxLines: 1,
-    //                           overflow: TextOverflow.ellipsis,
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   },
-    // );
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('items')
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('items')
           .where('userId', isEqualTo: uid)
-          .where('title', isGreaterThanOrEqualTo: query)
-          //.where('title', isLessThanOrEqualTo: query + '\uf8ff')// Ensure 'uid' exists in Firestore
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          .get(),
+      builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print(snapshot.error);
           return Center(child: Text('Error: ${snapshot.error}'));
+
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
-        if (snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('No Content'));
+
+        final List<QueryDocumentSnapshot> filteredDocs = snapshot.data!.docs
+            .where((doc) {
+          final title = doc['title']?.toString().toLowerCase() ?? '';
+          return title.contains(query.toLowerCase());
+        })
+            .toList();
+
+        if (filteredDocs.isEmpty) {
+          return Center(child: Text('No results found'));
         }
 
         return GridView.builder(
-          itemCount: snapshot.data!.docs.length,
+          itemCount: filteredDocs.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
             mainAxisSpacing: 16.0,
@@ -550,12 +487,11 @@ class MySearchDelegate extends SearchDelegate {
           padding: EdgeInsets.all(8),
           itemBuilder: (context, index) {
             Map<String, dynamic> data =
-            snapshot.data!.docs[index].data() as Map<String, dynamic>;
-
+            filteredDocs[index].data() as Map<String, dynamic>;
             return SizedBox(
               height: 350,
               child: Card(
-                color: Color(0xFFFBBB8F),
+                color: Colors.black,
                 child: Column(
                   children: <Widget>[
                     SizedBox(
@@ -563,7 +499,7 @@ class MySearchDelegate extends SearchDelegate {
                       width: double.infinity,
                       child: URLThumbnail(
                         data["url"],
-                        data["thumbnailUrl"],
+                        data["thumbnailUrl"] ?? data["thumbnailbase64img"] ?? " ",
                         data["title"],
                       ),
                     ),
@@ -593,74 +529,82 @@ class MySearchDelegate extends SearchDelegate {
     );
   }
 
+
+  // @override
+  // Widget buildResults(BuildContext context) {
+  //   return StreamBuilder<QuerySnapshot>(
+  //     stream: FirebaseFirestore.instance.collection('items')
+  //         .where('userId', isEqualTo: uid)
+  //         .where('title', isGreaterThanOrEqualTo: query)
+  //         //.where('title', isLessThanOrEqualTo: query + '\uf8ff')// Ensure 'uid' exists in Firestore
+  //         .snapshots(),
+  //     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //       if (snapshot.hasError) {
+  //         print(snapshot.error);
+  //         return Center(child: Text('Error: ${snapshot.error}'));
+  //       }
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       }
+  //       if (snapshot.data!.docs.isEmpty) {
+  //         return Center(child: Text('No Content'));
+  //       }
+  //
+  //       return GridView.builder(
+  //         itemCount: snapshot.data!.docs.length,
+  //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //           crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+  //           mainAxisSpacing: 16.0,
+  //           crossAxisSpacing: 16.0,
+  //           childAspectRatio: 1.0,
+  //         ),
+  //         padding: EdgeInsets.all(8),
+  //         itemBuilder: (context, index) {
+  //           Map<String, dynamic> data =
+  //           snapshot.data!.docs[index].data() as Map<String, dynamic>;
+  //           return SizedBox(
+  //             height: 350,
+  //             child: Card(
+  //               color: Colors.black,
+  //               child: Column(
+  //                 children: <Widget>[
+  //                   SizedBox(
+  //                     height: 120,
+  //                     width: double.infinity,
+  //                     child: URLThumbnail(
+  //                       data["url"],
+  //                       data["thumbnailUrl"] ?? data["thumbnailbase64img"] ?? " ",
+  //                       data["title"],
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 5),
+  //                   Padding(
+  //                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //                     child: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         Expanded(
+  //                           child: Text(
+  //                             data["title"],
+  //                             maxLines: 1,
+  //                             overflow: TextOverflow.ellipsis,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget buildSuggestions(BuildContext context) {
     return Container(); // You can modify this if you need suggestions
   }
 }
-
-
-// class MySearchdelegate extends SearchDelegate {
-//   @override
-//   List<Widget>? buildActions(BuildContext context) {
-//     IconButton(
-//         onPressed: () {
-//           if (query.isEmpty) {
-//             close(context, null);
-//           } else {
-//             query = "";
-//           }
-//         },
-//         icon: Icon(
-//           Icons.clear,
-//           color: Colors.black,
-//         ));
-//     return null;
-//   }
-//
-//   @override
-//   Widget? buildLeading(BuildContext context) {
-//     return IconButton(
-//         onPressed: () => close(context, null),
-//         icon: Icon(Icons.arrow_back_outlined));
-//   }
-//
-//   @override
-//   Widget buildResults(BuildContext context) => Container(
-//     child: Text(query),
-//
-//
-//   );
-//
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     List<String> searchResults = [
-//       // "Apple",
-//       // "Banana",
-//       // "Cherry",
-//       // "Date",
-//       // "Elderberry"
-//     ]; // Example data. Replace with your actual data source.
-//
-//     List<String> suggestions = searchResults.where((searchResult) {
-//       final result = searchResult.toLowerCase();
-//       final input = query.toLowerCase();
-//       return result.contains(input);
-//     }).toList(); // Convert the iterable to a list.
-//
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (context, index) {
-//         final suggestion = suggestions[index];
-//         return ListTile(
-//           title: Text(suggestion),
-//           onTap: () {
-//             query = suggestion;
-//             showResults(context);
-//           },
-//         );
-//       },
-//     );
-//   }
-//
-// }

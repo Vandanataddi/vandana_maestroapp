@@ -212,26 +212,26 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     TextEditingController passwordController = TextEditingController();
 
     showDialog(
-
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
          // backgroundColor: Color(0xFFFBBB8F),
           title: const Text('Confirm Deletion'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(labelText: "Email"),
-              ),
-              TextField(
-                controller: passwordController,
-                decoration: InputDecoration(labelText: "Password"),
-                obscureText: true,
-              ),
-            ],
-          ),
+          content: Text("Are you sure, you want to delete this account?"),
+          // content: Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     TextField(
+          //       controller: emailController,
+          //       decoration: InputDecoration(labelText: "Email"),
+          //     ),
+          //     TextField(
+          //       controller: passwordController,
+          //       decoration: InputDecoration(labelText: "Password"),
+          //       obscureText: true,
+          //     ),
+          //   ],
+          // ),
           actions: [
             TextButton(
               onPressed: () {
@@ -241,14 +241,15 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             TextButton(
               onPressed: () async {
-                int? result = await Authentification().deleteUser(
-                  emailController.text,
-                  passwordController.text,
-                );
+                // int? result = await Authentification().deleteUser(
+                //   emailController.text,
+                //   passwordController.text,
+                // );
 
                 if (context.mounted) {
                   Navigator.of(context).pop();
-                  _handleDeleteResult(context, result);
+                  _handleDeleteResult(context,);
+                  //_handleDeleteResult(context, result);
                 }
               },
               child: const Text('Delete',style: TextStyle(color:Colors.red,fontWeight: FontWeight.bold)),
@@ -259,9 +260,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
 
-  void _handleDeleteResult(context, int? result) {
-    if (result == 1) {
-      print("result 1");
+  void _handleDeleteResult(context,) {
+    // if (result == 1) {
+    //   print("result 1");
       // Successfully deleted
       showModalBottomSheet(
         context: context,
@@ -307,83 +308,38 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           );
         },
       );
-    } else if (result == 2) {
-      // Requires reauthentication
-      print('Please reauthenticate to delete your account.');
-
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Your session has expired. Please log in again and try deleting your account.",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    backgroundColor: const Color(0xFF6100FF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'OK',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    } else {
-      // Deletion failed
-      print('Failed to delete the account.');
-      showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            width:
-                double.infinity, // Make sure the bottom sheet takes full width
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-            color: Colors.white,
-            child: const Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Failed to delete the account',
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
+    // } else {
+    //   print('Failed to delete the account.');
+    //   showModalBottomSheet(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return Container(
+    //         width:
+    //             double.infinity, // Make sure the bottom sheet takes full width
+    //         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+    //         color: Colors.white,
+    //         child: const Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             Text(
+    //               'Failed to delete the account',
+    //               style: TextStyle(
+    //                 color: Colors.red,
+    //                 fontWeight: FontWeight.bold,
+    //                 fontSize: 16,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     },
+    //   );
+    // }
   }
 
   void PrivacyPolicydialouge() {
     showDialog(
-
       context: context,
       builder: (BuildContext context) {
         return Expanded(

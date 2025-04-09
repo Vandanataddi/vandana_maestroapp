@@ -237,7 +237,6 @@ class TabContent extends StatelessWidget {
           itemBuilder: (context, index) {
             Map<String, dynamic> data =
             snapshot.data!.docs[index].data() as Map<String, dynamic>;
-
             return SizedBox(
               height: 350,
               child: Card(
@@ -249,7 +248,7 @@ class TabContent extends StatelessWidget {
                       width: double.infinity,
                       child: URLThumbnail(
                         data["url"],
-                        data["thumbnailUrl"],
+                        data["thumbnailUrl"] ?? data["thumbnailbase64img"] ?? "",
                         data["title"],
                       ),
                     ),
@@ -416,7 +415,7 @@ class TabContent extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
-                  backgroundColor: const Color(0xFF44140F),
+                  backgroundColor: Colors.red,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

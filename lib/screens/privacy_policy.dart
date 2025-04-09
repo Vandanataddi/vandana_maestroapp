@@ -95,7 +95,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ],
               )),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               RichText(
                   text: TextSpan(
@@ -111,7 +111,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   TextSpan(
                     text:
                         'We collect information that is associated with your Storem account (such as profile name).',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: Colors.white),
                   )
                 ],
               )),
@@ -332,7 +332,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'With Your Consent:',
+                        text: 'With Your Consent :  '  ,
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -353,7 +353,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Service Providers:',
+                        text: 'Service Providers :  ',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -374,7 +374,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Safety, security and fraud prevention:',
+                        text: 'Safety, security and fraud prevention :  ',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -395,7 +395,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Compliance with law and enforcing our Terms of Use:',
+                        text: 'Compliance with law and enforcing our Terms of Use :  ',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -416,7 +416,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   text: TextSpan(
                     children: <TextSpan>[
                       TextSpan(
-                        text: 'Business Transfers: ',
+                        text: 'Business Transfers :  ',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,

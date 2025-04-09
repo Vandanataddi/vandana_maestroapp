@@ -79,7 +79,7 @@ class UrlData {
   });
 
   // Fetch Metadata & Convert Thumbnail to Base64
-  static Future<UrlData> fetchThumbnailUrl(String url) async {
+  static Future<UrlData> fetchThumbnailUrlss(String url) async {
     UrlData urlData = UrlData(url: url);
 
     try {
@@ -121,6 +121,51 @@ class UrlData {
 
     return urlData;
   }
+  static Future<UrlData> fetchThumbnailUrl(String url) async {
+    UrlData urlData = UrlData(url: url);
+
+    try {
+      Uri uri = Uri.parse(url);
+      if (uri.host.contains("google.com") && uri.queryParameters.containsKey('url')) {
+        url = uri.queryParameters['url']!;
+        print("Extracted real URL from Google redirect: $url");
+        urlData.url = url;
+      }
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final document = htmlParser.parse(response.body);
+        final metaTags = document.getElementsByTagName('meta');
+
+        for (var tag in metaTags) {
+          final property = tag.attributes['property'] ?? tag.attributes['name'];
+
+          if (property == 'og:image') {
+            urlData.thumbnailUrl = tag.attributes['content'] ?? "";
+          } else if (property == 'og:title') {
+            urlData.title = tag.attributes['content'] ?? "";
+          }
+
+          if (urlData.thumbnailUrl.isNotEmpty && urlData.title.isNotEmpty) {
+            break;
+          }
+        }
+        if (urlData.thumbnailUrl.isNotEmpty) {
+          urlData.base64Image = await downloadImageAsBase64(urlData.thumbnailUrl) ?? '';
+        }
+        if (urlData.base64Image.isNotEmpty) {
+          await storeBase64InFirebase(urlData);
+        }
+      } else {
+        print('Failed to load webpage: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching thumbnail: $e');
+    }
+
+    return urlData;
+  }
+
 
   // Download Image & Convert to Base64
   static Future<String?> downloadImageAsBase64(String imageUrl) async {

@@ -84,9 +84,30 @@ class _URLThumbnailState extends State<URLThumbnail> {
     _decodeBase64Image();
   }
 
+  // void _decodeBase64Image() {
+  //   try {
+  //     _thumbnailBytes = base64Decode(widget.thumbnailBase64);
+  //   } catch (e) {
+  //     print("Error decoding base64: $e");
+  //     _thumbnailBytes = null;
+  //   }
+  // }
+  bool isBase64(String str) {
+    final pattern = RegExp(r'^[A-Za-z0-9+/=]+$');
+    return pattern.hasMatch(str) && str.length % 4 == 0;
+  }
+
   void _decodeBase64Image() {
     try {
-      _thumbnailBytes = base64Decode(widget.thumbnailBase64);
+      final base64String = widget.thumbnailBase64.trim();
+
+      // Simple check: valid base64 images often start with /9j (JPEG) or iVBORw0 (PNG)
+      if (base64String.startsWith("/9j") || base64String.startsWith("iVBORw0") || isBase64(base64String)) {
+        _thumbnailBytes = base64Decode(base64String);
+      } else {
+        print("Not base64 image data, skipping decode");
+        _thumbnailBytes = null;
+      }
     } catch (e) {
       print("Error decoding base64: $e");
       _thumbnailBytes = null;
@@ -104,7 +125,7 @@ class _URLThumbnailState extends State<URLThumbnail> {
         },
         child: _thumbnailBytes != null
             ? Image.memory(_thumbnailBytes!, fit: BoxFit.cover, height: 100, width: 100)
-            : Image.asset('assets/images/default.png', fit: BoxFit.cover, height: 100, width: 100),
+            : Image.asset('assets/images/default.jpeg', fit: BoxFit.cover, height: 100, width: 100),
       ),
     );
   }

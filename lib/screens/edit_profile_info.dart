@@ -512,16 +512,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("Saving Image URL to Firestore: $imageUrl"); // Debugging
 
         // Update Firestore
+        setState(() async {
         await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
           'username': usernameController.text,
           'email': emailController.text,
           'phone': phoneController.text,
-          'profileImage': imageUrl, // ✅ Ensure Firestore gets updated correctly
+          'profileImage': imageUrl,
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 
+        });
+
         setState(() {
-          profileImageUrl = imageUrl; // ✅ Ensure UI updates
+          profileImageUrl = imageUrl;
           _imageFile = null;
         });
 
@@ -725,21 +728,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       // ),
                     ],
                   )),
-              SizedBox(height: 250),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OutlinedButton(
-                      onPressed: _loadUserData, child: Text("Cancel")),
-                  ElevatedButton(
-                    onPressed: _saveChanges,
-                    style: ElevatedButton.styleFrom(
-                      //backgroundColor: Color(0xFF44140F),
-                    ),
-                    child: Text("Save", style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ),
+              // SizedBox(height: 850,child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     OutlinedButton(
+              //         onPressed: _loadUserData, child: Text("Cancel",style: TextStyle(color: Colors.white),)),
+              //     OutlinedButton(
+              //         onPressed: _saveChanges, child: Text("Save", style: TextStyle(color: Colors.white),)),
+              //   ],
+              // ),
+             // ),
             ],
           ),
         ));
