@@ -126,13 +126,29 @@ class UrlData {
 
     try {
       Uri uri = Uri.parse(url);
+
+      // Handle Google redirect URLs
       if (uri.host.contains("google.com") && uri.queryParameters.containsKey('url')) {
         url = uri.queryParameters['url']!;
         print("Extracted real URL from Google redirect: $url");
         urlData.url = url;
       }
-      final response = await http.get(Uri.parse(url));
 
+      // Check if the URL is a direct image link
+      if (url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") || url.endsWith(".webp") || url.endsWith(".gif")) {
+        urlData.thumbnailUrl = url;
+        urlData.title = "Image Preview";
+        urlData.base64Image = await downloadImageAsBase64(url) ?? '';
+
+        if (urlData.base64Image.isNotEmpty) {
+          await storeBase64InFirebase(urlData);
+        }
+
+        return urlData;
+      }
+
+      // For HTML pages
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final document = htmlParser.parse(response.body);
         final metaTags = document.getElementsByTagName('meta');
@@ -150,9 +166,11 @@ class UrlData {
             break;
           }
         }
+
         if (urlData.thumbnailUrl.isNotEmpty) {
           urlData.base64Image = await downloadImageAsBase64(urlData.thumbnailUrl) ?? '';
         }
+
         if (urlData.base64Image.isNotEmpty) {
           await storeBase64InFirebase(urlData);
         }

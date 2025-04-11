@@ -374,10 +374,10 @@ class TabContent extends StatelessWidget {
             TextButton(
               child: const Text('Delete',style: TextStyle(color: Colors.red),),
               onPressed: () async {
+                Navigator.pop(context);
                 await DB.deleteItem(uid, id);
                 Helper.showSnackbar(context, "Deleted!!!");
                 updateState();
-                Navigator.pop(context);
                 _handleDeleteResult(context);
               },
             ),

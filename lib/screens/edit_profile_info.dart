@@ -493,7 +493,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     }
   }
-
   Future<void> _saveChanges() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -512,7 +511,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("Saving Image URL to Firestore: $imageUrl"); // Debugging
 
         // Update Firestore
-        setState(() async {
         await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
           'username': usernameController.text,
           'email': emailController.text,
@@ -521,16 +519,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
 
-        });
+// ✅ Update Firebase Auth profile
+        await user!.updateDisplayName(usernameController.text);
+        await user!.updateEmail(emailController.text);
+        await user!.reload(); // Important: refresh current user
+        user = FirebaseAuth.instance.currentUser;
 
         setState(() {
-          profileImageUrl = imageUrl;
+          profileImageUrl = imageUrl!;
           _imageFile = null;
         });
+
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile Updated Successfully')),
         );
+
+        await user!.updateDisplayName(usernameController.text);
+        await user!.updateEmail(emailController.text);
+        await user!.reload(); // Refresh the user data
+        user = FirebaseAuth.instance.currentUser;
+
       } catch (e) {
         print('Error saving profile: $e'); // Debugging
         ScaffoldMessenger.of(context).showSnackBar(
@@ -539,6 +548,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
   }
+
 
   Future<String?> _uploadProfileImage() async {
     if (_imageFile == null || user == null) return null;
@@ -565,80 +575,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-
-
-  // Future<void> _saveChanges() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     try {
-  //       String? imageUrl = profileImageUrl;
-  //
-  //       // If a new image is selected, upload it and get the URL
-  //       if (_imageFile != null) {
-  //         imageUrl = await _uploadProfileImage();
-  //       }
-  //
-  //       // Update Firebase Auth profile
-  //       await user?.updateDisplayName(usernameController.text);
-  //       await user?.updateEmail(emailController.text);
-  //
-  //       // Update Firestore document
-  //       DocumentReference userDoc =
-  //           FirebaseFirestore.instance.collection('users').doc(user?.uid);
-  //       await userDoc.set({
-  //         'username': usernameController.text,
-  //         'email': emailController.text,
-  //         'phone': phoneController.text,
-  //         'profileImage': imageUrl, // Save image URL
-  //         'updatedAt': FieldValue.serverTimestamp(),
-  //       }, SetOptions(merge: true)); // Avoid overwriting existing fields
-  //
-  //       setState(() {
-  //         profileImageUrl = imageUrl; // Update UI with new profile image
-  //       });
-  //
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Profile Updated Successfully')),
-  //       );
-  //     } catch (e) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Error: $e')),
-  //       );
-  //     }
-  //   }
-  // }
-
-  // Future<String?> _uploadProfileImage() async {
-  //   if (_imageFile == null || user == null) return null;
-  //
-  //   try {
-  //     String fileName = "profile_${user!.uid}.jpg";
-  //     Reference storageRef =
-  //         FirebaseStorage.instance.ref().child('profile_images/$fileName');
-  //
-  //     UploadTask uploadTask = storageRef.putFile(_imageFile!);
-  //     TaskSnapshot snapshot = await uploadTask;
-  //     String downloadUrl = await snapshot.ref.getDownloadURL();
-  //
-  //     return downloadUrl; // Return the uploaded image URL
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error uploading image: $e')),
-  //     );
-  //     return null;
-  //   }
-  // }
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -646,10 +582,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           centerTitle: true,
           //backgroundColor: Color(0xFF8B481A),
           //backgroundColor: Color(0xFF44140F),
-          title: Text("Edit Profile", style: TextStyle(color: Colors.white)),
+          title: Text("Edit Profile", style: TextStyle(color: Colors.red,fontSize: 28)),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: Colors.red),
           ),
         ),
         body: SingleChildScrollView(
@@ -728,18 +664,90 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       // ),
                     ],
                   )),
-              // SizedBox(height: 850,child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              //     OutlinedButton(
-              //         onPressed: _loadUserData, child: Text("Cancel",style: TextStyle(color: Colors.white),)),
-              //     OutlinedButton(
-              //         onPressed: _saveChanges, child: Text("Save", style: TextStyle(color: Colors.white),)),
-              //   ],
-              // ),
-             // ),
+              SizedBox(height: 650,child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton(
+                      onPressed: _loadUserData, child: Text("Cancel",style: TextStyle(color: Colors.white),)),
+                  OutlinedButton(
+                      onPressed: _saveChanges, child: Text("Save", style: TextStyle(color: Colors.white),)),
+                ],
+              ),
+             ),
             ],
           ),
         ));
   }
 }
+
+
+// Future<void> _saveChanges() async {
+//   if (_formKey.currentState!.validate()) {
+//     try {
+//       String? imageUrl = profileImageUrl;
+//
+//       // If a new image is selected, upload it and get the URL
+//       if (_imageFile != null) {
+//         imageUrl = await _uploadProfileImage();
+//       }
+//
+//       // Update Firebase Auth profile
+//       await user?.updateDisplayName(usernameController.text);
+//       await user?.updateEmail(emailController.text);
+//
+//       // Update Firestore document
+//       DocumentReference userDoc =
+//           FirebaseFirestore.instance.collection('users').doc(user?.uid);
+//       await userDoc.set({
+//         'username': usernameController.text,
+//         'email': emailController.text,
+//         'phone': phoneController.text,
+//         'profileImage': imageUrl, // Save image URL
+//         'updatedAt': FieldValue.serverTimestamp(),
+//       }, SetOptions(merge: true)); // Avoid overwriting existing fields
+//
+//       setState(() {
+//         profileImageUrl = imageUrl; // Update UI with new profile image
+//       });
+//
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Profile Updated Successfully')),
+//       );
+//     } catch (e) {
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Error: $e')),
+//       );
+//     }
+//   }
+// }
+
+// Future<String?> _uploadProfileImage() async {
+//   if (_imageFile == null || user == null) return null;
+//
+//   try {
+//     String fileName = "profile_${user!.uid}.jpg";
+//     Reference storageRef =
+//         FirebaseStorage.instance.ref().child('profile_images/$fileName');
+//
+//     UploadTask uploadTask = storageRef.putFile(_imageFile!);
+//     TaskSnapshot snapshot = await uploadTask;
+//     String downloadUrl = await snapshot.ref.getDownloadURL();
+//
+//     return downloadUrl; // Return the uploaded image URL
+//   } catch (e) {
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('Error uploading image: $e')),
+//     );
+//     return null;
+//   }
+// }
+// Future<void> _pickImage() async {
+//   final picker = ImagePicker();
+//   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+//
+//   if (pickedFile != null) {
+//     setState(() {
+//       _imageFile = File(pickedFile.path);
+//     });
+//   }
+// }

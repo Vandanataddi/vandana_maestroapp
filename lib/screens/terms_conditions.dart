@@ -12,13 +12,13 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
     appBar: AppBar(
-      title: const Text('Terms And Conditions', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+      title: const Text('Terms And Conditions', style: TextStyle(color: Colors.red,fontSize: 28, fontWeight: FontWeight.bold),),
       // backgroundColor:
       // const Color(0xFF44140F),
       centerTitle: true,
       leading: IconButton(onPressed: () {
         Navigator.pop(context);
-      }, icon: Icon(Icons.arrow_back,color: Colors.white,)),// Set the body background color
+      }, icon: Icon(Icons.arrow_back,color: Colors.red,)),// Set the body background color
     ),
 
       body: SingleChildScrollView(

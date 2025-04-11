@@ -13,7 +13,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
         appBar: AppBar(
           title: const Text(
             'Privacy And Policy',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.red ,fontSize: 28, fontWeight: FontWeight.bold),
           ),
           //backgroundColor: const Color(0xFF44140F),
           centerTitle: true,
@@ -23,7 +23,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
               },
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: Colors.red,
               )), // Set the body background color
         ),
         body: SingleChildScrollView(
@@ -34,7 +34,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                     //  color: Color(0xFF44140F),
-                      fontSize: 28)),
+                      fontSize: 25)),
               SizedBox(
                 height: 18,
               ),
@@ -54,7 +54,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ),
               ),
               SizedBox(
-                height: 15,
+                height: 20,
               ),
               Text(
                 "Our Collection, Use, and Disclosure of Personal Information",
@@ -64,7 +64,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                     fontSize: 20),
               ),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               Text(
                 "We collect the following categories of personal information about you:",
@@ -74,7 +74,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ),
               ),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               RichText(
                   text: TextSpan(
@@ -116,7 +116,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ],
               )),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               RichText(
                   text: TextSpan(
@@ -137,7 +137,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ],
               )),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               RichText(
                   text: TextSpan(
@@ -158,7 +158,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
                 ],
               )),
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               RichText(
                   text: TextSpan(
@@ -433,7 +433,7 @@ class _PrivacypolicyScreenState extends State<PrivacypolicyScreen> {
 
 
               SizedBox(
-                height: 15,
+                height: 20,
               ),
               Text(
                 "Your Data Protection Rights",

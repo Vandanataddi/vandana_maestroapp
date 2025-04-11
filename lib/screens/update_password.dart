@@ -180,11 +180,11 @@ class _UpdatepasswordState extends State<Updatepassword> {
     const Color myCustomColor = Color(0xFFFBBB8F);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Change Password', style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: const Text('Change Password', style: TextStyle(color: Colors.red, fontSize:28,fontWeight: FontWeight.bold),),
         centerTitle: true,
         leading: IconButton(onPressed: () {
           Navigator.pop(context);
-        }, icon: Icon(Icons.arrow_back,color: Colors.white,)),// Set the body background color
+        }, icon: Icon(Icons.arrow_back,color: Colors.red,)),// Set the body background color
       ),
       body: Container(
         //color: const Color(0xFFF3F8FF), // Set the body background color
