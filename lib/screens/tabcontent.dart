@@ -209,6 +209,7 @@ class TabContent extends StatelessWidget {
         stream: FirebaseFirestore.instance.collection('items')
             .where('userId', isEqualTo: uid)  // Ensure 'uid' exists in Firestore
             .where('category', isEqualTo: category)
+            .orderBy('createdAt', descending: true)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
     //return FutureBuilder<QuerySnapshot>(
@@ -248,7 +249,7 @@ class TabContent extends StatelessWidget {
                       width: double.infinity,
                       child: URLThumbnail(
                         data["url"],
-                        data["thumbnailUrl"] ?? data["thumbnailbase64img"] ?? "",
+                        data["thumbnailbase64img"] ?? data["thumbnailUrl"] ?? "",
                         data["title"],
                       ),
                     ),
@@ -307,15 +308,16 @@ class TabContent extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  leading: Icon(Icons.copy, color: Colors.white),
+                  leading: Icon(Icons.copy , color: Colors.white),
                   title: Text(
-                    'Copy',
+                    'Copy Link',
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   onTap: () {
                     Helper.copyToClipboard(url);
-                    Helper.showSnackbar(context, "Copied!!!");
+                    Helper.showSnackbar(context, "Link copied to clip board!!!");
+                    //Helper.showSnackbar(context, "Copied!!!");
                     Navigator.pop(context);
                   },
                 ),
@@ -375,10 +377,10 @@ class TabContent extends StatelessWidget {
               child: const Text('Delete',style: TextStyle(color: Colors.red),),
               onPressed: () async {
                 Navigator.pop(context);
-                await DB.deleteItem(uid, id);
-                Helper.showSnackbar(context, "Deleted!!!");
-                updateState();
                 _handleDeleteResult(context);
+                await DB.deleteItem(uid, id);
+                //Helper.showSnackbar(context, "Deleted!!!");
+                updateState();
               },
             ),
           ],

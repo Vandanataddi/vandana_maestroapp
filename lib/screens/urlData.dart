@@ -201,8 +201,6 @@ class UrlData {
       return null;
     }
   }
-
-
   static Future<void> storeBase64InFirebase(UrlData urlData) async {
     try {
       final dbRef = FirebaseDatabase.instance.ref().child('stored_urls').push();

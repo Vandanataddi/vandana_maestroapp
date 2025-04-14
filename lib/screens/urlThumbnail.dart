@@ -96,7 +96,6 @@ class _URLThumbnailState extends State<URLThumbnail> {
     final pattern = RegExp(r'^[A-Za-z0-9+/=]+$');
     return pattern.hasMatch(str) && str.length % 4 == 0;
   }
-
   void _decodeBase64Image() {
     try {
       final base64String = widget.thumbnailBase64.trim();
@@ -105,7 +104,7 @@ class _URLThumbnailState extends State<URLThumbnail> {
       if (base64String.startsWith("/9j") || base64String.startsWith("iVBORw0") || isBase64(base64String)) {
         _thumbnailBytes = base64Decode(base64String);
       } else {
-        print("Not base64 image data, skipping decode");
+       // print("Not base64 image data, skipping decode");
         _thumbnailBytes = null;
       }
     } catch (e) {
@@ -124,12 +123,43 @@ class _URLThumbnailState extends State<URLThumbnail> {
           _launchURL();
         },
         child: _thumbnailBytes != null
-            ? Image.memory(_thumbnailBytes!, fit: BoxFit.cover, height: 100, width: 100)
-            : Image.asset('assets/images/default.jpeg', fit: BoxFit.cover, height: 100, width: 100),
+            ? Image.memory(_thumbnailBytes!, fit: BoxFit.cover)
+            : _isValidUrl(widget.thumbnailBase64)
+            ? Image.network(
+          widget.thumbnailBase64,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            // If image fails to load (like expired or 403), show default image
+            return Image.asset('assets/images/default.jpeg', fit: BoxFit.cover);
+          },
+        )
+            : Image.asset('assets/images/default.jpeg', fit: BoxFit.cover)
+
       ),
     );
   }
 
+  bool _isValidUrl(String url) {
+    final uri = Uri.tryParse(url);
+    return uri != null && (uri.isScheme("http") || uri.isScheme("https"));
+  }
+
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Container(
+  //     height: 100,
+  //     width: 100,
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         _launchURL();
+  //       },
+  //       child: _thumbnailBytes != null
+  //           ? Image.memory(_thumbnailBytes!, fit: BoxFit.cover, height: 100, width: 100)
+  //           : Image.asset('assets/images/default.jpeg', fit: BoxFit.cover, height: 100, width: 100),
+  //     ),
+  //   );
+  // }
   void _launchURL() async {
     Uri uri = Uri.parse(widget.url);
     if (await canLaunchUrl(uri)) {

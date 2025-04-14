@@ -548,7 +548,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     }
   }
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   Future<String?> _uploadProfileImage() async {
     if (_imageFile == null || user == null) return null;
@@ -614,10 +623,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       decoration: BoxDecoration(
                           //color: Color(0xFF44140F),
                           shape: BoxShape.circle),
-                      // child: IconButton(
-                      //   icon: Icon(Icons.edit, color: Colors.white),
-                      //   onPressed: _pickImage,
-                      // ),
+                      child: IconButton(
+                        icon: Icon(Icons.edit, color: Colors.white),
+                        onPressed: _pickImage,
+                      ),
                     ),
                   ),
                 ],
@@ -739,15 +748,5 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 //       SnackBar(content: Text('Error uploading image: $e')),
 //     );
 //     return null;
-//   }
-// }
-// Future<void> _pickImage() async {
-//   final picker = ImagePicker();
-//   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-//
-//   if (pickedFile != null) {
-//     setState(() {
-//       _imageFile = File(pickedFile.path);
-//     });
 //   }
 // }

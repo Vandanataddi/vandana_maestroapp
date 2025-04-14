@@ -181,8 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                             icon: Icon(_obscureText
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                              //color: Color(0xFF44140F)
-                                //: Icons.visibility_off,color: Color(0xFFFBBB8F)
+                              color: Colors.black
                               ),
                             onPressed: () {
                               if (mounted) {
@@ -318,7 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                       const SizedBox(height: 16.0),
-                      Text("Or"),
+                      Text("Or", style: TextStyle(color: Colors.black),),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -333,14 +332,14 @@ class _LoginPageState extends State<LoginPage> {
                                   },
                                 ),
                             SizedBox(height: 10),
-                            SignInButton(
-                                  Buttons.apple,
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
-                                  onPressed: () {
-                                    signInWithApple(context: context, scopes: [Scope.email, Scope.fullName]);
-                                  },
-                                ),
+                            // SignInButton(
+                            //       Buttons.apple,
+                            //       elevation: 2,
+                            //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
+                            //       onPressed: () {
+                            //         signInWithApple(context: context, scopes: [Scope.email, Scope.fullName]);
+                            //       },
+                            //     ),
                           ],
                         ),
                       ),

@@ -10,7 +10,6 @@ import 'package:storem/main.dart';
 import 'package:the_apple_sign_in/scope.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 
-
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
 
@@ -43,18 +42,21 @@ class _RegisterViewState extends State<RegisterView> {
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+            await googleSignInAccount.authentication;
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken,
         );
 
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
         if (userCredential.user != null) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyApp()));
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => MyApp()));
         }
       }
     } catch (error) {
@@ -62,7 +64,9 @@ class _RegisterViewState extends State<RegisterView> {
       Helper.showFlashError(context, "Google sign-in failed", Colors.red);
     }
   }
-  Future<User?> signInWithApple({required BuildContext context, List<Scope> scopes = const []}) async {
+
+  Future<User?> signInWithApple(
+      {required BuildContext context, List<Scope> scopes = const []}) async {
     final appleSignInAvailable = await TheAppleSignIn.isAvailable();
     print(appleSignInAvailable);
     final result = await TheAppleSignIn.performRequests([
@@ -78,10 +82,10 @@ class _RegisterViewState extends State<RegisterView> {
         final credential = oAuthCredential.credential(
             idToken: String.fromCharCodes(appleIdCredential.identityToken!),
             accessToken:
-            String.fromCharCodes(appleIdCredential.authorizationCode!));
+                String.fromCharCodes(appleIdCredential.authorizationCode!));
 
         final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+            await FirebaseAuth.instance.signInWithCredential(credential);
 
         final firebaseUser = userCredential.user!;
         print('appleuser: $firebaseUser');
@@ -109,7 +113,9 @@ class _RegisterViewState extends State<RegisterView> {
             await firebaseUser.updateDisplayName(displayName);
           }
         }
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyApp()),);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyApp()),
+        );
 
       case AuthorizationStatus.error:
         print(result.error.toString());
@@ -140,66 +146,109 @@ class _RegisterViewState extends State<RegisterView> {
     });
 
     if (user != null) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyApp()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => MyApp()));
     } else {
-      Helper.showFlashError(context, "Oops! This email is already registered", Colors.red);
+      Helper.showFlashError(
+          context, "Oops! This email is already registered", Colors.red);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: const Color(0xFFF3F8FF)),
+      appBar: AppBar(backgroundColor: const Color(0xFFF3F8FF),
+        leading: IconButton(onPressed: () {
+          Navigator.pop(context);
+        }, icon: Icon(Icons.arrow_back,color: Colors.black,)),
+      ),
+
       body: Container(
         color: const Color(0xFFF3F8FF),
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => FocusScope.of(context).unfocus(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 24),
                   const Center(
-                    child: Text("Register", style: TextStyle(fontSize: 28,color: Colors.black, fontWeight: FontWeight.bold)),
+                    child: Text("Register",
+                        style: TextStyle(
+                            fontSize: 28,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 48),
-                  const Text("Display Name",style: TextStyle(color: Colors.black)),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Display Name",
+                      style:
+                      TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
                   const SizedBox(height: 4.0),
                   TextFormField(
-                    decoration: const InputDecoration(border: UnderlineInputBorder()),
-                    controller: _nameTextController,style: TextStyle(color: Colors.grey[700]),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
+                    controller: _nameTextController,
+                    style: TextStyle(color: Colors.grey[700]),
                     validator: (value) => Validator.validateName(name: value),
                   ),
                   const SizedBox(height: 16.0),
-                  const Text("Email",style: TextStyle(color: Colors.black)),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Email",
+                      style:
+                      TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
                   const SizedBox(height: 4.0),
                   TextFormField(
-                    decoration: const InputDecoration(border: UnderlineInputBorder()),
-                    controller: _emailTextController,style: TextStyle(color: Colors.grey[700]),
+                    decoration:
+                        const InputDecoration(border: UnderlineInputBorder()),
+                    controller: _emailTextController,
+                    style: TextStyle(color: Colors.grey[700]),
                     validator: (value) => Validator.validateEmail(email: value),
                   ),
                   const SizedBox(height: 16.0),
-                  const Text("Password",style: TextStyle(color: Colors.black)),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Password",
+                      style:
+                      TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
                   const SizedBox(height: 4.0),
                   TextFormField(
                     decoration: InputDecoration(
                       border: const UnderlineInputBorder(),
                       suffixIcon: IconButton(
-                        icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off,color: Color(0xFF44140F)
-                          ,),
+                        icon: Icon(
+                          _obscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color(0xFF44140F),
+                        ),
                         onPressed: _togglePasswordVisibility,
                       ),
                     ),
-                    controller: _passwordTextController,style: TextStyle(color: Colors.grey[700]),
+                    controller: _passwordTextController,
+                    style: TextStyle(color: Colors.grey[700]),
                     obscureText: _obscureText,
-                    validator: (value) => Validator.validatePassword(password: value),
+                    validator: (value) =>
+                        Validator.validatePassword(password: value),
                   ),
                   const SizedBox(height: 25.0),
-                  const Center(child: Text("Or",style: TextStyle(color: Colors.black))),
+                  const Center(
+                      child: Text("Or", style: TextStyle(color: Colors.black))),
                   const SizedBox(height: 17.0),
                   // SizedBox(
                   //   width: double.infinity,
@@ -208,28 +257,31 @@ class _RegisterViewState extends State<RegisterView> {
                   //     child: const Text("Sign in with Google"),
                   //   ),
                   // ),
-                  Padding(padding: EdgeInsets.fromLTRB(80, 0, 20, 0),child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SignInButton(
-                        Buttons.google,
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
-                        onPressed: () {
-                          _signInWithGoogle(context);
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      SignInButton(
-                        Buttons.apple,
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
-                        onPressed: () {
-                          signInWithApple(context: context, scopes: [Scope.email, Scope.fullName]);
-                        },
-                      ),
-                    ],
-                  ),),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SignInButton(
+                          Buttons.google,
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
+                          onPressed: () {
+                            _signInWithGoogle(context);
+                          },
+                        ),
+                        SizedBox(height: 10),
+                        // SignInButton(
+                        //       Buttons.apple,
+                        //       elevation: 2,
+                        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(2.0),),
+                        //       onPressed: () {
+                        //         signInWithApple(context: context, scopes: [Scope.email, Scope.fullName]);
+                        //       },
+                        //     ),
+                      ],
+                    ),
+                  ),
                   const Spacer(),
                   SizedBox(
                     width: double.infinity,
@@ -237,7 +289,8 @@ class _RegisterViewState extends State<RegisterView> {
                       style: ElevatedButton.styleFrom(
                         //backgroundColor: const Color(0xFF44140F),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
                       ),
                       onPressed: _register,
                       child: _isLoading

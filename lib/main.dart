@@ -469,8 +469,7 @@ class MySearchDelegate extends SearchDelegate {
             .where((doc) {
           final title = doc['title']?.toString().toLowerCase() ?? '';
           return title.contains(query.toLowerCase());
-        })
-            .toList();
+        }).toList();
 
         if (filteredDocs.isEmpty) {
           return Center(child: Text('No results found'));
@@ -499,7 +498,7 @@ class MySearchDelegate extends SearchDelegate {
                       width: double.infinity,
                       child: URLThumbnail(
                         data["url"],
-                        data["thumbnailUrl"] ?? data["thumbnailbase64img"] ?? " ",
+                        data["thumbnailbase64img"] ?? data["thumbnailUrl"] ?? "",
                         data["title"],
                       ),
                     ),
