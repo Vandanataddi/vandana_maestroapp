@@ -108,11 +108,12 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.maestroapp"  // Your application ID
+        applicationId "com.storem.maestroapp"
+        //applicationId = "com.example.maestroapp"  // Your application ID
         minSdkVersion 23
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode 2
+        versionName "1.0.1"
     }
 
     signingConfigs {
