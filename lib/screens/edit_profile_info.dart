@@ -472,7 +472,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     phoneController.dispose();
     super.dispose();
   }
-
   Future<void> _loadUserData() async {
     if (user == null) return;
 
@@ -489,8 +488,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         emailController.text = data['email'] ?? "";
         phoneController.text = data['phone'] ?? "";
         passwordController.text = data['password'] ?? "";
-        profileImageUrl = data['photoURL'] ?? "";
+        profileImageUrl = data['profileImage'] ?? "";
       });
+
+      if (data['profileImage'] != null && data['profileImage'].toString().isNotEmpty) {
+        profileImageUrl = data['profileImage'];
+      }
     }
   }
   Future<void> _saveChanges() async {
@@ -558,8 +561,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     }
   }
-
   Future<String?> _uploadProfileImage() async {
+    if (_imageFile == null || user == null || !await _imageFile!.exists()) {
+      print('Image file does not exist or user not found');
+      return null;
+    }
+
+    try {
+
+      print("Trying to upload file:");
+      print("User: ${user?.uid}");
+      print("File path: ${_imageFile?.path}");
+      print("Exists: ${await _imageFile?.exists()}");
+
+      final fileName = "profile_${user!.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final storageRef = FirebaseStorage.instance.ref().child('profile_images/$fileName');
+
+      print("Uploading file from: ${_imageFile!.path}");
+
+      final uploadTask = storageRef.putFile(_imageFile!);
+      final snapshot = await uploadTask;
+
+
+
+      if (snapshot.state == TaskState.success) {
+        final downloadUrl = await snapshot.ref.getDownloadURL();
+        print("Upload successful: $downloadUrl");
+        return downloadUrl;
+      } else {
+        print("Upload failed with state: ${snapshot.state}");
+        return null;
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
+      return null;
+    }
+  }
+
+
+
+  Future<String?> _uploadProfileImagess() async {
     if (_imageFile == null || user == null) return null;
 
     try {
@@ -604,7 +648,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               Stack(
                 children: [
                   CircleAvatar(
-                    radius: 60,
+                    radius: 55,
                     backgroundColor: Colors.transparent,
                     backgroundImage: _imageFile != null
                         ? FileImage(_imageFile!)
@@ -618,15 +662,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     bottom: 0,
                     right: 0,
                     child: Container(
-                      width: 40,
-                      height: 40,
+                      width: 25,
+                      height: 45,
                       decoration: BoxDecoration(
                           //color: Color(0xFF44140F),
                           shape: BoxShape.circle),
-                      child: IconButton(
-                        icon: Icon(Icons.edit, color: Colors.white),
-                        onPressed: _pickImage,
-                      ),
+                      // child: IconButton(
+                      //   icon: Icon(Icons.edit, color: Colors.red),
+                      //   onPressed: _pickImage,
+                      // ),
                     ),
                   ),
                 ],

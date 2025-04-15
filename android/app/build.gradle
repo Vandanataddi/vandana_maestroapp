@@ -1,7 +1,7 @@
+//
 //plugins {
 //    id "com.android.application"
 //    id "kotlin-android"
-//    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
 //    id "dev.flutter.flutter-gradle-plugin"
 //}
 //
@@ -16,41 +16,82 @@
 //    }
 //
 //    kotlinOptions {
-//         jvmTarget = JavaVersion.VERSION_1_8
-//        //jvmTarget = "17"
+//        jvmTarget = JavaVersion.VERSION_1_8
 //    }
 //
 //    defaultConfig {
-//        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-//        applicationId = "com.example.storem"
-//        // You can update the following values to match your application needs.
-//        // For more information, see: https://flutter.dev/to/review-gradle-config.
-//        //minSdk = flutter.minSdkVersion
+//        //applicationId = "com.example.storem"
+//        applicationId = "com.example.maestroapp"
 //        minSdkVersion 23
 //        targetSdk = flutter.targetSdkVersion
 //        versionCode = flutter.versionCode
 //        versionName = flutter.versionName
 //    }
 //
-//    buildTypes {
+//    signingConfigs {
 //        release {
-//            // TODO: Add your own signing config for the release build.
-//            // Signing with the debug keys for now, so `flutter run --release` works.
-//            signingConfig = signingConfigs.debug
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
 //        }
 //    }
+//
+//    buildTypes {
+//        release {
+//            signingConfig signingConfigs.release
+//            minifyEnabled false
+//            shrinkResources false
+//        }
+//    }
+////    buildTypes {
+////        release {
+////            signingConfig = signingConfigs.debug
+////        }
+////    }
 //}
 //
 //flutter {
 //    source = "../.."
 //}
+//
+//apply plugin: 'com.google.gms.google-services'  // ✅ Add this line for Firebase
 
-
-plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
 }
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new org.gradle.api.GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '12').toInteger()
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '2.0.0')
+
+// Load key.properties
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withReader('UTF-8') { reader ->
+        keystoreProperties.load(reader)
+    }
+}
+
+//plugins {
+//    id "com.android.application"
+//    id "kotlin-android"
+//    id "dev.flutter.flutter-gradle-plugin"
+//}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-android'
+apply plugin: 'dev.flutter.flutter-gradle-plugin'
 
 android {
     namespace = "com.example.storem"
@@ -67,23 +108,33 @@ android {
     }
 
     defaultConfig {
-        //applicationId = "com.example.storem"
-        applicationId = "com.example.maestroapp"
+        applicationId = "com.example.maestroapp"  // Your application ID
         minSdkVersion 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
         }
     }
 }
 
 flutter {
-    source = "../.."
+    source = "../.."  // Path to the Flutter source directory
 }
 
 apply plugin: 'com.google.gms.google-services'  // ✅ Add this line for Firebase
