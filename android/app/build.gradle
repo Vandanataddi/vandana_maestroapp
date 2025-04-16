@@ -94,7 +94,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'dev.flutter.flutter-gradle-plugin'
 
 android {
-    namespace = "com.example.storem"
+    //namespace = "com.example.storem"
+    namespace 'com.storem.maestroapp'
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -112,8 +113,8 @@ android {
         //applicationId = "com.example.maestroapp"  // Your application ID
         minSdkVersion 23
         targetSdk = flutter.targetSdkVersion
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
     }
 
     signingConfigs {
