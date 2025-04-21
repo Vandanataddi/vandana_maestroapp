@@ -76,6 +76,17 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     User? user = Authentification().getCurrentUser(); // Get current user
     return Column(
       children: [
+        // CircleAvatar(
+        //   radius: 55,
+        //   backgroundColor: Colors.transparent,
+        //   backgroundImage: _imageFile != null
+        //       ? FileImage(_imageFile!)
+        //       : (profileImageUrl != null &&
+        //       profileImageUrl!.isNotEmpty)
+        //       ? CachedNetworkImageProvider(profileImageUrl!)
+        //       : AssetImage('assets/images/avathar.png')
+        //   as ImageProvider,
+        // ),
         CircleAvatar(
           radius: 50,
           backgroundImage: AssetImage('assets/images/avathar.png'),
@@ -138,7 +149,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             // Navigator.pushReplacement(
             //     context, MaterialPageRoute(builder: (context) => LoginPage()));
           } else if (title == "Delete Account") {
-            await FirebaseAuth.instance.signOut();
             _showDeleteConfirmationDialog(context);
           }
         },
@@ -245,7 +255,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 //   emailController.text,
                 //   passwordController.text,
                 // );
-
+                await FirebaseAuth.instance.signOut();
                 if (context.mounted) {
                   Navigator.of(context).pop();
                   _handleDeleteResult(context,);

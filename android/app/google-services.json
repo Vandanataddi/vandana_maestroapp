@@ -95,6 +95,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "264812020290-7bq36jgmoijoqjc0lulqsrqfh6rkcsoe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.storem.maestroapp",
+            "certificate_hash": "6e96e03c1d333a8fa18a5945da250f5cc2b754b4"
+          }
+        },
+        {
           "client_id": "264812020290-panvoahqtfe256ubltgga8tkkac445t5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

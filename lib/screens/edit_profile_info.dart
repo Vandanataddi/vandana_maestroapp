@@ -462,9 +462,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       profileImageUrl = user!.photoURL;
       _loadUserData();
     }
-    //_loadUserData();
   }
-
   @override
   void dispose() {
     usernameController.dispose();
@@ -488,12 +486,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         emailController.text = data['email'] ?? "";
         phoneController.text = data['phone'] ?? "";
         passwordController.text = data['password'] ?? "";
-        profileImageUrl = data['profileImage'] ?? "";
-      });
+       // profileImageUrl = data['profileImage'] ?? "";
 
-      if (data['profileImage'] != null && data['profileImage'].toString().isNotEmpty) {
-        profileImageUrl = data['profileImage'];
-      }
+        if (data['profileImage'] != null && data['profileImage'].toString().isNotEmpty) {
+          profileImageUrl = data['profileImage'];
+        }
+      });
     }
   }
   Future<void> _saveChanges() async {
@@ -600,9 +598,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return null;
     }
   }
-
-
-
   Future<String?> _uploadProfileImagess() async {
     if (_imageFile == null || user == null) return null;
 
@@ -633,8 +628,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          //backgroundColor: Color(0xFF8B481A),
-          //backgroundColor: Color(0xFF44140F),
           title: Text("Edit Profile", style: TextStyle(color: Colors.red,fontSize: 28)),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -721,7 +714,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   OutlinedButton(
-                      onPressed: _loadUserData, child: Text("Cancel",style: TextStyle(color: Colors.white),)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      //onPressed: _loadUserData,
+                      child: Text("Cancel",style: TextStyle(color: Colors.white),)),
                   OutlinedButton(
                       onPressed: _saveChanges, child: Text("Save", style: TextStyle(color: Colors.white),)),
                 ],
