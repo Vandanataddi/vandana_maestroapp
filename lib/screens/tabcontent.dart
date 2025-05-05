@@ -330,7 +330,7 @@ class TabContent extends StatelessWidget {
                   ),
                   onTap: () async {
                     ShareResult sr = await Helper.share(url);
-                    if (sr.status == ShareResultStatus.success) {
+                    if (sr != null && sr.status == ShareResultStatus.success) {
                       Helper.showSnackbar(context, "Shared!!!");
                     }
                     Navigator.pop(context);
