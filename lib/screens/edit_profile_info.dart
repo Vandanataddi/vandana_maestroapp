@@ -434,6 +434,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -645,11 +646,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     backgroundColor: Colors.transparent,
                     backgroundImage: _imageFile != null
                         ? FileImage(_imageFile!)
-                        : (profileImageUrl != null &&
-                                profileImageUrl!.isNotEmpty)
-                            ? CachedNetworkImageProvider(profileImageUrl!)
-                            : AssetImage('assets/images/avathar.png')
-                                as ImageProvider,
+                        : (profileImageUrl != null && profileImageUrl!.isNotEmpty)
+                        ? CachedNetworkImageProvider(profileImageUrl!,)
+                        : const AssetImage('assets/images/avathar.png'),
+                    onBackgroundImageError: (exception, stackTrace) {
+                      print('Error loading profile image: $exception');
+                      FirebaseCrashlytics.instance.recordError(exception, stackTrace);
+                    },
+
+                    // backgroundImage: _imageFile != null
+                    //     ? FileImage(_imageFile!)
+                    //     : (profileImageUrl != null &&
+                    //             profileImageUrl!.isNotEmpty)
+                    //         ? CachedNetworkImageProvider(profileImageUrl!)
+                    //         : AssetImage('assets/images/avathar.png')
+                    //             as ImageProvider,
                   ),
                   Positioned(
                     bottom: 0,
